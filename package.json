@@ -13,13 +13,32 @@
     "react-day-picker": "^7.3.0",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "typescript": "3.5.1"
+    "typescript": "3.5.1",
+    "axios": "^0.18.0",
+    "jsonic": "^0.3.1",
+    "lodash": "^4.17.11",
+    "qs": "^6.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "clean": "rimraf build && rimraf dist",
+    "bundle:clean": "rm -rf build/static/assets",
+    "bundle:copy:js": "cpx \"build/static/js/**/*.js\" \"build/static/assets\"",
+    "bundle:copy": "npm run bundle:copy:js",
+    "bundle:rename": "cd build/static/assets && cp main.*.js main.js & cp runtime*.js runtime.js & cp 2.*chunk.js chunk.js",
+    "bundle": "npm run bundle:clean & npm run bundle:copy & npm run bundle:rename",
+    "deploy:s3": "aws s3 sync build s3://spilt-milk-orders --acl public-read",
+    
+    "deploy:s3:finished": "yarn notify -t \"S3 staging deployment finished\" -m \"Spilt milk orders\"",
+    "deploy:s3:production": "aws s3 sync build s3://spilt-milk-orders --acl public-read",
+    "deploy:s3:production:finished": "yarn notify -t \"S3 production deployment finished\" -m \"Trading block: Charts\"",
+    "deploy": "npm run clean && npm run build && npm run bundle && npm run deploy:s3 && npm run deploy:s3:finished",
+    "deploy:production": "npm run clean && npm run build && npm run bundle && npm run deploy:s3:production && npm run deploy:s3:production:finished",
+
+    "notify": "notify  --sound \"none\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -37,6 +56,24 @@
     ]
   },
   "devDependencies": {
-    "@types/react-datepicker": "^2.3.0"
+    "@types/react-datepicker": "^2.3.0",
+    "@babel/core": "^7.2.2",
+    "@types/jsonic": "^0.3.0",
+    "@types/lodash": "^4.14.123",
+    "@types/qs": "^6.5.2",
+    "@types/react-bootstrap": "^0.32.17",
+    "@types/react-s-alert": "^1.3.2",
+    "@typescript-eslint/eslint-plugin": "^1.4.2",
+    "cpx": "^1.5.0",
+    "cross-env": "^5.2.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-react-hooks": "^1.5.1",
+    "node-notifier-cli": "^1.1.2",
+    "prettier": "^1.16.4",
+    "renamer": "^1.1.1",
+    "replace-in-file": "^3.4.4",
+    "rimraf": "^2.6.3",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack-cli": "^3.3.0"
   }
 }

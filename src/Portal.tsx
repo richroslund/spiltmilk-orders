@@ -1,14 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 
-export const Portal: React.FunctionComponent<{ containerSelector: string; timeout?: number, optional?: boolean }> = ({
+export const Portal: React.FunctionComponent<{ containerSelector: string; timeout?: number, optional?: boolean, className?: string }> = ({
     children,
     containerSelector,
     timeout,
     optional,
+    className
 }) => {
     const container = useRef<Element>();
     const elem = useRef<HTMLDivElement>(document.createElement('div'));
+    if(elem && elem.current && className) {
+        elem.current.className = className;
+    }
     const [containerExists, setContainerExists] = useState(false);
 
     useEffect(() => {
